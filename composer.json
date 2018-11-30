@@ -1,0 +1,19 @@
+{
+    "name": "skollro/alexa-php-sdk",
+    "description": "Expressive SDK for developing Amazon Alexa skills in PHP.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Simon Kollross",
+            "email": "simon.kollross@web3it.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Skollro\\Alexa\\": "src"
+        }
+    },
+    "require": {
+        "maxbeckers/amazon-alexa-php": "^1.2"
+    }
+}
