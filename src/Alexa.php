@@ -71,14 +71,14 @@ class Alexa
                 ->pipe($request, $response)
                 ->through($this->middlewares)
                 ->then(function ($request, $response) {
-                    $this->runHandler($this->supportedHandler($request), $request, $response);
-
-                    return $response;
+                    return tap($response, function ($response) use ($request) {
+                        $this->runHandler($this->supportedHandler($request), $request, $response);
+                    });
                 });
         } catch (Exception $e) {
-            $this->runHandler($this->errorHandler, $e, $request, $response);
-
-            return $response;
+            return tap($response, function ($response) use ($e, $request) {
+                $this->runHandler($this->errorHandler, $e, $request, $response);
+            });
         }
     }
 
