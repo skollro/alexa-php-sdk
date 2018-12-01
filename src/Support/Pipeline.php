@@ -1,6 +1,6 @@
 <?php
 
-namespace Skollro\Alexa;
+namespace Skollro\Alexa\Support;
 
 class Pipeline
 {
