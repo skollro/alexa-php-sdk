@@ -23,13 +23,7 @@ class Router
 
     public function dispatch($request, $response)
     {
-        $handler = $this->determineHandler($request);
-
-        if (! is_callable($handler)) {
-            $handler = (new $handler);
-        }
-
-        $handler($request, $response);
+        ($this->determineHandler($request))($request, $response);
 
         return $response;
     }
