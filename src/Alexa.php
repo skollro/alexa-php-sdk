@@ -4,34 +4,23 @@ namespace Skollro\Alexa;
 
 use Exception;
 use MaxBeckers\AmazonAlexa\Request\Request;
-use MaxBeckers\AmazonAlexa\Validation\RequestValidator;
-use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
+use Skollro\Alexa\Middleware\VerifyRequest;
+use Skollro\Alexa\Middleware\VerifyApplicationId;
 
 class Alexa
 {
-    protected $appId;
     protected $router;
     protected $middlewares = [];
     protected $errorHandler;
 
-    private function __construct($appId)
+    private function __construct($applicationId)
     {
-        $this->appId = $appId;
         $this->router = new Router;
 
-        $this->middlewares[] = function ($next, $request, $response) {
-            (new RequestValidator)->validate($request);
-
-            return $next($request, $response);
-        };
-
-        $this->middlewares[] = function ($next, $request, $response) {
-            if ($request->getApplicationId() !== $this->appId) {
-                throw new MissingRequestHandlerException;
-            }
-
-            return $next($request, $response);
-        };
+        $this->middlewares = [
+            new VerifyRequest,
+            new VerifyApplicationId($applicationId),
+        ];
     }
 
     public static function skill($appId)
