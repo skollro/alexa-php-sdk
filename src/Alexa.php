@@ -24,45 +24,57 @@ class Alexa
         ];
     }
 
-    public static function skill(string $applicationId)
+    public static function skill(string $applicationId): self
     {
-        return new static($applicationId);
+        return new self($applicationId);
     }
 
-    public function middleware(callable $middleware)
+    public function middleware(callable $middleware): self
     {
         $this->middlewares[] = $middleware;
+
+        return $this;
     }
 
-    public function launch(callable $handler)
+    public function launch(callable $handler): self
     {
         $this->router->launch($handler);
+
+        return $this;
     }
 
-    public function intent(string $name, callable $handler)
+    public function intent(string $name, callable $handler): self
     {
         $this->router->intent($name, $handler);
+
+        return $this;
     }
 
-    public function error(callable $handler)
+    public function error(callable $handler): self
     {
         $this->errorHandler = $handler;
+
+        return $this;
     }
 
-    public function handle(Request $request): Response
+    public function handle(Request $request, callable $callback = null)
     {
-        $response = new Response;
-
         try {
-            return (new Pipeline)
-                ->pipe($request, $response)
+            $response = (new Pipeline)
+                ->pipe($request, new Response)
                 ->through($this->middlewares)
                 ->then(function ($request, $response) {
                     return $this->router->dispatch($request, $response);
                 });
         } catch (Exception $e) {
-            return $this->handleError($e, $request, $response);
+            $response = $this->handleError($e, $request, new Response);
         }
+
+        if ($callback !== null) {
+            return $callback($response);
+        }
+
+        return $response;
     }
 
     private function handleError(Exception $e, Request $request, Response $response): Response
