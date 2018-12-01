@@ -14,16 +14,16 @@ class Pipeline
         return $this;
     }
 
-    public function through($pipes)
+    public function through(array $pipes)
     {
         $this->pipes = $pipes;
 
         return $this;
     }
 
-    public function then($callback)
+    public function then(callable $callback)
     {
-        $pipeline = array_reduce(array_reverse($this->pipes), function ($stack, $pipe) {
+        $pipeline = array_reduce(array_reverse($this->pipes), function (callable $stack, callable $pipe) {
             return function (...$passables) use ($stack, $pipe) {
                 return $pipe($stack, ...$passables);
             };

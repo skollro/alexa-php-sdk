@@ -14,7 +14,7 @@ class Alexa
     protected $middlewares = [];
     protected $errorHandler;
 
-    private function __construct($applicationId)
+    private function __construct(string $applicationId)
     {
         $this->router = new Router;
 
@@ -24,34 +24,33 @@ class Alexa
         ];
     }
 
-    public static function skill($applicationId)
+    public static function skill(string $applicationId)
     {
         return new static($applicationId);
     }
 
-    public function middleware($middleware)
+    public function middleware(callable $middleware)
     {
         $this->middlewares[] = $middleware;
     }
 
-    public function launch($handler)
+    public function launch(callable $handler)
     {
         $this->router->launch($handler);
     }
 
-    public function intent($name, $handler)
+    public function intent(string $name, callable $handler)
     {
         $this->router->intent($name, $handler);
     }
 
-    public function error($handler)
+    public function error(callable $handler)
     {
         $this->errorHandler = $handler;
     }
 
-    public function handle($requestBody, $signatureCertChainUrl, $signature)
+    public function handle(Request $request): Response
     {
-        $request = Request::fromAmazonRequest($requestBody, $signatureCertChainUrl, $signature);
         $response = new Response;
 
         try {
@@ -66,7 +65,7 @@ class Alexa
         }
     }
 
-    private function handleError($e, $request, $response)
+    private function handleError(Exception $e, Request $request, Response $response): Response
     {
         ($this->errorHandler)($e, $request, $response);
 

@@ -2,6 +2,7 @@
 
 namespace Skollro\Alexa;
 
+use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\IntentRequest;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\LaunchRequest;
 use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
@@ -11,24 +12,24 @@ class Router
     protected $launchHandler;
     protected $intentHandlers = [];
 
-    public function launch($handler)
+    public function launch(callable $handler)
     {
         $this->launchHandler = $handler;
     }
 
-    public function intent($name, $handler)
+    public function intent(string $name, callable $handler)
     {
         $this->intentHandlers[$name] = $handler;
     }
 
-    public function dispatch($request, $response)
+    public function dispatch(Request $request, Response $response): Response
     {
         ($this->determineHandler($request))($request, $response);
 
         return $response;
     }
 
-    private function determineHandler($request)
+    private function determineHandler(Request $request): callable
     {
         if ($request->request instanceof LaunchRequest) {
             return $this->launchHandler;

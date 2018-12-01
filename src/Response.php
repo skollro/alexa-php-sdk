@@ -17,15 +17,17 @@ class Response implements JsonSerializable
         $this->response->shouldEndSession = true;
     }
 
-    public function say($text)
+    public function say(string $text): self
     {
         $this->response->response->outputSpeech = OutputSpeech::createByText($text);
+
         return $this;
     }
 
-    public function linkAccount()
+    public function linkAccount(): self
     {
         $this->response->response->card = new Card(Card::TYPE_LINK_ACCOUNT);
+
         return $this;
     }
 
