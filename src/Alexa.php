@@ -5,21 +5,19 @@ namespace Skollro\Alexa;
 use Exception;
 use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Validation\RequestValidator;
-use MaxBeckers\AmazonAlexa\Request\Request\Standard\IntentRequest;
-use MaxBeckers\AmazonAlexa\Request\Request\Standard\LaunchRequest;
 use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
 
 class Alexa
 {
     protected $appId;
+    protected $router;
     protected $middlewares = [];
-    protected $launchHandler;
-    protected $intentHandlers = [];
     protected $errorHandler;
 
     private function __construct($appId)
     {
         $this->appId = $appId;
+        $this->router = new Router;
 
         $this->middlewares[] = function ($next, $request, $response) {
             (new RequestValidator)->validate($request);
@@ -48,12 +46,12 @@ class Alexa
 
     public function launch($handler)
     {
-        $this->launchHandler = $handler;
+        $this->router->launch($handler);
     }
 
     public function intent($name, $handler)
     {
-        $this->intentHandlers[$name] = $handler;
+        $this->router->intent($name, $handler);
     }
 
     public function error($handler)
@@ -71,40 +69,17 @@ class Alexa
                 ->pipe($request, $response)
                 ->through($this->middlewares)
                 ->then(function ($request, $response) {
-                    return tap($response, function ($response) use ($request) {
-                        $this->runHandler($this->supportedHandler($request), $request, $response);
-                    });
+                    return $this->router->dispatch($request, $response);
                 });
         } catch (Exception $e) {
-            return tap($response, function ($response) use ($e, $request) {
-                $this->runHandler($this->errorHandler, $e, $request, $response);
-            });
+            return $this->handleError($e, $request, $response);
         }
     }
 
-    private function supportedHandler($request)
+    private function handleError($e, $request, $response)
     {
-        if ($request->request instanceof LaunchRequest) {
-            return $this->launchHandler;
-        }
+        ($this->errorHandler)($e, $request, $response);
 
-        if ($request->request instanceof IntentRequest) {
-            if (! isset($this->intentHandlers[$request->request->intent->name])) {
-                throw new MissingRequestHandlerException;
-            }
-
-            return $this->intentHandlers[$request->request->intent->name];
-        }
-
-        throw new MissingRequestHandlerException;
-    }
-
-    private function runHandler($handler, ...$args)
-    {
-        if (is_callable($handler)) {
-            return ($handler)(...$args);
-        }
-
-        return (new $handler)(...$args);
+        return $response;
     }
 }
