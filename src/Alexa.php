@@ -24,9 +24,9 @@ class Alexa
         ];
     }
 
-    public static function skill($appId)
+    public static function skill($applicationId)
     {
-        return new static($appId);
+        return new static($applicationId);
     }
 
     public function middleware($middleware)
