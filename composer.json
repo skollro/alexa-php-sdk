@@ -9,7 +9,6 @@
         }
     ],
     "autoload": {
-        "files": ["src/helpers.php"],
         "psr-4": {
             "Skollro\\Alexa\\": "src"
         }
