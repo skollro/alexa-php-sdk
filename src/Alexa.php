@@ -12,7 +12,7 @@ use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
 class Alexa
 {
     protected $appId;
-    protected $beforeHandler;
+    protected $middlewares = [];
     protected $launchHandler;
     protected $intentHandlers = [];
     protected $errorHandler;
@@ -20,6 +20,20 @@ class Alexa
     private function __construct($appId)
     {
         $this->appId = $appId;
+
+        $this->middlewares[] = function ($next, $request, $response) {
+            (new RequestValidator)->validate($request);
+
+            return $next($request, $response);
+        };
+
+        $this->middlewares[] = function ($next, $request, $response) {
+            if ($request->getApplicationId() !== $this->appId) {
+                throw new MissingRequestHandlerException;
+            }
+
+            return $next($request, $response);
+        };
     }
 
     public static function skill($appId)
@@ -27,9 +41,9 @@ class Alexa
         return new static($appId);
     }
 
-    public function before($handler)
+    public function middleware($middleware)
     {
-        $this->beforeHandler = $handler;
+        $this->middlewares[] = $middleware;
     }
 
     public function launch($handler)
@@ -49,28 +63,23 @@ class Alexa
 
     public function handle($requestBody, $signatureCertChainUrl, $signature)
     {
+        $request = Request::fromAmazonRequest($requestBody, $signatureCertChainUrl, $signature);
         $response = new Response;
 
         try {
-            $request = Request::fromAmazonRequest($requestBody, $signatureCertChainUrl, $signature);
+            return (new Pipeline)
+                ->pipe($request, $response)
+                ->through($this->middlewares)
+                ->then(function ($request, $response) {
+                    $this->runHandler($this->supportedHandler($request), $request, $response);
 
-            $requestValidator = new RequestValidator;
-            $requestValidator->validate($request);
-
-            if ($request->getApplicationId() !== $this->appId) {
-                throw new MissingRequestHandlerException;
-            }
-
-            if ($this->runHandler($this->beforeHandler, $request, $response) === false) {
-                return $response;
-            }
-
-            $this->runHandler($this->supportedHandler($request), $request, $response);
+                    return $response;
+                });
         } catch (Exception $e) {
             $this->runHandler($this->errorHandler, $e, $request, $response);
-        }
 
-        return $response;
+            return $response;
+        }
     }
 
     private function supportedHandler($request)
