@@ -12,7 +12,7 @@ class Alexa
 {
     protected $router;
     protected $middlewares = [];
-    protected $errorHandler;
+    protected $exceptionHandler;
 
     private function __construct(string $applicationId)
     {
@@ -50,9 +50,9 @@ class Alexa
         return $this;
     }
 
-    public function error(callable $handler): self
+    public function exception(callable $handler): self
     {
-        $this->errorHandler = $handler;
+        $this->exceptionHandler = $handler;
 
         return $this;
     }
@@ -67,7 +67,7 @@ class Alexa
                     return $this->router->dispatch($request, $response);
                 });
         } catch (Exception $e) {
-            $response = $this->handleError($e, $request, new Response);
+            $response = $this->handleException($e, $request, new Response);
         }
 
         if ($callback !== null) {
@@ -77,9 +77,9 @@ class Alexa
         return $response;
     }
 
-    private function handleError(Exception $e, Request $request, Response $response): Response
+    private function handleException(Exception $e, Request $request, Response $response): Response
     {
-        ($this->errorHandler)($e, $request, $response);
+        ($this->exceptionHandler)($e, $request, $response);
 
         return $response;
     }
