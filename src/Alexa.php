@@ -14,19 +14,18 @@ class Alexa
     protected $middlewares = [];
     protected $exceptionHandler;
 
-    private function __construct(string $applicationId)
+    public function __construct()
     {
         $this->router = new Router;
-
-        $this->middlewares = [
-            new VerifyRequest,
-            new VerifyApplicationId($applicationId),
-        ];
     }
 
     public static function skill(string $applicationId): self
     {
-        return new self($applicationId);
+        $alexa = new self;
+        $alexa->middleware(new VerifyRequest);
+        $alexa->middleware(new VerifyApplicationId($applicationId));
+
+        return $alexa;
     }
 
     public function middleware(callable $middleware): self
