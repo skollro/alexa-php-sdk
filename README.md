@@ -5,4 +5,4 @@
 [![Build Status](https://img.shields.io/travis/skollro/alexa-php-sdk/master.svg?style=flat-square)](https://travis-ci.org/skollro/alexa-php-sdk)
 [![StyleCI](https://styleci.io/repos/159875033/shield)](https://styleci.io/repos/159875033)
 
-This package provides a framework-agnostic declarative approach for developing Alexa skills in PHP.
+This package provides a framework-agnostic declarative expressive SDK for developing Alexa skills in PHP.
