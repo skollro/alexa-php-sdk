@@ -74,6 +74,7 @@ class AlexaTest extends TestCase
             })
             ->handle($request, function ($response) {
                 $this->assertInstanceOf(Response::class, $response);
+
                 return true;
             });
 
