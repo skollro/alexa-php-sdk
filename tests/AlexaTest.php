@@ -92,14 +92,14 @@ class AlexaTest extends TestCase
                 $this->assertInstanceOf(Request::class, $request);
                 $this->assertInstanceOf(Response::class, $response);
 
-                $response->say('BEFORE');
+                $response->say('Foo');
 
                 return $next($request, $response);
             })
             ->launch(function ($request, $response) {
-                $this->assertEquals('BEFORE', $response->jsonSerialize()->response->outputSpeech->text);
+                $this->assertEquals('Foo', $response->jsonSerialize()->response->outputSpeech->text);
 
-                $response->say('LAUNCH');
+                $response->say('Bar');
             })
             ->middleware(function ($next, $request, $response) {
                 $this->assertInstanceOf(Request::class, $request);
@@ -107,13 +107,13 @@ class AlexaTest extends TestCase
 
                 $response = $next($request, $response);
 
-                $this->assertEquals('LAUNCH', $response->jsonSerialize()->response->outputSpeech->text);
+                $this->assertEquals('Bar', $response->jsonSerialize()->response->outputSpeech->text);
 
-                return $response->say('AFTER');
+                return $response->say('Baz');
             })
             ->handle($request);
 
-        $this->assertEquals('AFTER', $response->jsonSerialize()->response->outputSpeech->text);
+        $this->assertEquals('Baz', $response->jsonSerialize()->response->outputSpeech->text);
     }
 
     /** @test */
