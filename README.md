@@ -1,4 +1,4 @@
-# Amazon Alexa PHP SDK
+# Amazon Alexa SDK for PHP
 
 [![Latest Version](https://img.shields.io/github/release/skollro/alexa-php-sdk.svg?style=flat-square)](https://github.com/skollro/alexa-php-sdk/releases)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
