@@ -23,7 +23,7 @@ Alexa::skill('amzn1.ask.skill.XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')
     });
 ```
 
-## Reminder
+## Disclaimer
 
 ***This package is no official Amazon Alexa SDK.***
 
