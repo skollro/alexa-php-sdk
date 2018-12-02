@@ -135,7 +135,7 @@ If you throw an exception in a request handler we invoke this callback so you ca
 ```php
 $alexa->exception(function ($e, $request, $response) {
     if ($e instanceof MyException) {
-        return $e->say('An error occurred');
+        return $response->say('An error occurred');
     }
 
     throw $e;
