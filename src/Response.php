@@ -31,14 +31,14 @@ class Response implements JsonSerializable
 
         return $this;
     }
-    
+
     public function simple(string $title, string $content): self
     {
         $this->response->response->card = Card::createSimple($title, $content);
 
         return $this;
     }
-    
+
     public function standard(string $title, string $content, string $smallImageUrl, string $largeImageUrl): self
     {
         $this->response->response->card = Card::createStandard($title, $content, CardImage::fromUrls($smallImageUrl, $largeImageUrl));
