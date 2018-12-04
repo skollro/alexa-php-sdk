@@ -27,7 +27,7 @@ class Response implements JsonSerializable
 
     public function linkAccount(): self
     {
-        $this->response->response->card = new Card(Card::TYPE_LINK_ACCOUNT);
+        $this->response->response->card = Card::createLinkAccount();
 
         return $this;
     }
