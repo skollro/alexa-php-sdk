@@ -4,6 +4,7 @@ namespace Skollro\Alexa;
 
 use JsonSerializable;
 use MaxBeckers\AmazonAlexa\Response\Card;
+use MaxBeckers\AmazonAlexa\Response\CardImage;
 use MaxBeckers\AmazonAlexa\Response\OutputSpeech;
 use MaxBeckers\AmazonAlexa\Response\Response as AlexaResponse;
 
@@ -27,6 +28,20 @@ class Response implements JsonSerializable
     public function linkAccount(): self
     {
         $this->response->response->card = new Card(Card::TYPE_LINK_ACCOUNT);
+
+        return $this;
+    }
+
+    public function simple(string $title, string $content): self
+    {
+        $this->response->response->card = Card::createSimple($title, $content);
+
+        return $this;
+    }
+
+    public function standard(string $title, string $content, string $smallImageUrl, string $largeImageUrl): self
+    {
+        $this->response->response->card = Card::createStandard($title, $content, CardImage::fromUrls($smallImageUrl, $largeImageUrl));
 
         return $this;
     }
