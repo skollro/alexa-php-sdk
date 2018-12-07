@@ -128,6 +128,25 @@ $alexa->intent('HelloIntent', function ($request, $response) {
 $alexa->intent('BarIntent', new BarIntent);
 ```
 
+### Responses
+
+You can make use of a fluent and natural syntax for creating responses.
+
+```php
+$alexa->intent('HelloIntent', function ($request, $response) {
+     // Basic response
+    $response->say('Hello world');
+
+    // Use cards for showing information in a user's Alexa App
+    $response->simple($title, $content);
+    $response->standard($title, $content, $smallImageUrl, $largeImageUrl);
+    $response->linkAccount();
+
+    // Use fluent syntax
+    $response->say('Link your account')->linkAccount();
+});
+```
+
 ### Exceptions
 
 If you throw an exception in a request handler we invoke this callback so you can handle exceptions there.
