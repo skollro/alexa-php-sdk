@@ -2,9 +2,9 @@
 
 namespace Skollro\Alexa\Middleware;
 
-use Skollro\Alexa\Response;
 use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Validation\RequestValidator;
+use Skollro\Alexa\Response;
 
 class VerifyRequest
 {

@@ -2,9 +2,9 @@
 
 namespace Skollro\Alexa\Middleware;
 
-use Skollro\Alexa\Response;
-use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
+use MaxBeckers\AmazonAlexa\Request\Request;
+use Skollro\Alexa\Response;
 
 class VerifyApplicationId
 {
