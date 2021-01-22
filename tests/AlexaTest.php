@@ -3,13 +3,13 @@
 namespace Skollro\Alexa\Test;
 
 use Exception;
-use Skollro\Alexa\Alexa;
-use Skollro\Alexa\Response;
-use PHPUnit\Framework\TestCase;
 use MaxBeckers\AmazonAlexa\Intent\Intent;
 use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\IntentRequest;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\LaunchRequest;
+use PHPUnit\Framework\TestCase;
+use Skollro\Alexa\Alexa;
+use Skollro\Alexa\Response;
 
 class AlexaTest extends TestCase
 {

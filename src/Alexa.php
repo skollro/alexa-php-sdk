@@ -3,10 +3,10 @@
 namespace Skollro\Alexa;
 
 use Exception;
-use Skollro\Alexa\Support\Pipeline;
 use MaxBeckers\AmazonAlexa\Request\Request;
-use Skollro\Alexa\Middleware\VerifyRequest;
 use Skollro\Alexa\Middleware\VerifyApplicationId;
+use Skollro\Alexa\Middleware\VerifyRequest;
+use Skollro\Alexa\Support\Pipeline;
 
 class Alexa
 {

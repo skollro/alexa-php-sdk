@@ -2,10 +2,10 @@
 
 namespace Skollro\Alexa;
 
+use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
 use MaxBeckers\AmazonAlexa\Request\Request;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\IntentRequest;
 use MaxBeckers\AmazonAlexa\Request\Request\Standard\LaunchRequest;
-use MaxBeckers\AmazonAlexa\Exception\MissingRequestHandlerException;
 
 class Router
 {
